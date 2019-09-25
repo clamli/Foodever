@@ -1,9 +1,9 @@
 import datetime
-from mongoengine import Document, fields
+from mongoengine import Document, fields, ReferenceField
 
 
 class User(Document):
-    id = fields.StringField(required=True)
+    user_id = fields.IntField(required=True)
     first_name = fields.StringField(max_length=30)
     last_name = fields.StringField(max_length=30)
     is_owner = fields.BooleanField(default=False)
@@ -16,18 +16,18 @@ class User(Document):
 
 
 class AttendanceHistory(Document):
-    user_id = fields.StringField(required=True)
-    event_id = fields.StringField(required=True)
+    user_id = fields.IntField(required=True)
+    event_id = fields.IntField(required=True)
 
 
 class Event(Document):
-    user_id = fields.StringField(required=True)
-    event_id = fields.StringField(required=True)
-    name = fields.StringField(max_length=100, required=True)
+    user_id = fields.IntField(required=True)
+    event_id = fields.IntField(required=True)
+    event_name = fields.StringField(max_length=100, required=True)
+    host_name = fields.StringField(max_length=100, required=True)
     date = fields.DateTimeField(default=datetime.datetime.utcnow)
     location = fields.StringField(required=True)
-    food = fields.DictField(default={"foodName": fields.StringField(max_length=30),
-                                     "foodTags": fields.ListField(fields.StringField(max_length=30)),
-                                     "foodType": fields.ListField(fields.StringField(max_length=30)),
-                                     "foodImages": fields.ListField(fields.ImageField())})
-    endorsement = fields.IntField(default=0)
+    # food = fields.DictField(default={"foodName": fields.StringField(max_length=30),
+    #                                  "foodTags": fields.ListField(fields.StringField(max_length=30)),
+    #                                  "foodType": fields.ListField(fields.StringField(max_length=30)),
+    #                                  "foodImages": fields.ListField(fields.ImageField())})
