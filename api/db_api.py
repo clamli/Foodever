@@ -1,7 +1,8 @@
 import mongoengine
-from db.db_collections import User, Event
+from db.db_collections import User, Event, AttendanceHistory
 from db.db_constants import DB_NAME, ALIAS, PORT, DEFAULT_PREFERENCE_VALUE
 from datetime import datetime
+
 
 class DatabaseAPI():
 
@@ -74,19 +75,18 @@ class DatabaseAPI():
             @:param location: the location of the event"""
         if user_id == -1:
             print("There must be a user creating the event")
-            return False
+            return None
         elif event_name == "":
             print("Event name can't be empty")
-            return False
+            return None
         elif location == "":
             print("Location can't be empty")
-            return False
+            return None
         new_event = Event(user_id = user_id, event_id = Event.objects().count() + 1, event_name = event_name,
                           host_name = host_name, date = date_time, location = location).save()
         return new_event
 
-    @staticmethod
-    def search_events(**fields):
+    def search_events(self, **fields):
         """search events that match the condition"""
         events = Event.objects(**fields).all()
         return events
@@ -113,4 +113,33 @@ class DatabaseAPI():
             return False
         event.delete()
 
+    # -- attendence operation starts here --
+    def confirm_attendence(self, user_id: int = -1, event_id: int = -1):
+        """register the user for a specific event"""
+        if user_id == -1:
+            print("User Id cannot be empty")
+            return None
+        elif event_id == -1:
+            print("")
+        attendence = AttendanceHistory(user_id = user_id, event_id = event_id).save()
+
+        return attendence
+
+    def cancel_attendence(self, user_id: int = -1, event_id: int = -1):
+        """remove the user from a specific event"""
+        attendence = AttendanceHistory.objects(user_id = user_id, event_id = event_id).first()
+        if attendence is None:
+            print("User did not attend the event")
+            return False
+
+        attendence.delete()
         return True
+
+    def search_attendence(self, **fields):
+        """search attendence history
+        Pass only user id will find all events the user attends
+        Pass only event id will find all users attending the event
+        Pass both will check if a user is registered for the event"""
+        attendence = AttendanceHistory.objects(**fields).all()
+
+        return attendence

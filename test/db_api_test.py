@@ -1,3 +1,6 @@
+import os, sys
+sys.path.append(os.path.dirname(".."))
+
 from datetime import datetime
 from api.db_api import DatabaseAPI
 
@@ -36,11 +39,24 @@ def test_api():
     event = client.edit_event(1, **updates)
     print(event.to_json())
 
+    print("Someone is joining our event!")
+    attendence = client.confirm_attendence(1, 1)
+    if attendence is not None:
+        print(attendence.to_json())
+
+    print("Double check that I am in")
+    criteria = {"user_id": 1, "event_id": 1}
+    attendence = client.search_attendence(**criteria)
+    if attendence is not None:
+        print(attendence.to_json())
+
     print("Data clean up")
     result = client.delete_user(user_id = 1)
     print("User Deleted? %s" % result)
     result = client.delete_events(event_id = 1)
     print("Event Deleted? %s" % result)
+    cancelled = client.cancel_attendence(1, 1)
+    print("Registration Deleted? %s" % cancelled)
 
 
 if __name__ == "__main__":
