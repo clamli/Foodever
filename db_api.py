@@ -1,17 +1,7 @@
 import mongoengine
-from db.db_collections import User, AttendanceHistory, Event
+from db.db_collections import User, Event
+from db.db_constants import DB_NAME, ALIAS, PORT, DEFAULT_PREFERENCE_VALUE
 from datetime import datetime
-
-# Database config constants
-ALIAS = "localhost"
-PORT = 27017
-DB_NAME = "foodeverdb"
-
-# App related parameters
-PREFERENCE = {"piazza": 0, "breakfast": 0, "burger": 0, "chinese": 0, "mexican": 0,
-                                           "korean": 0, "steakHouses": 0, "thai": 0, "seafood": 0, "japanese": 0,
-                                           "italian": 0, "vietnamese": 0, "sandwiches": 0, "vegetarian": 0,
-                                           "sushiBars": 0, "american": 0, "dessert": 0}
 
 
 def connect():
@@ -24,7 +14,7 @@ def connect():
 
 
 def create_user(first_name: str, last_name: str, is_owner: bool, credit: int,
-                email: str, preference: dict = PREFERENCE):
+                email: str, preference: dict = DEFAULT_PREFERENCE_VALUE):
     """add a user to the database
       @:param first_name
       @:param last_name
@@ -41,7 +31,7 @@ def create_user(first_name: str, last_name: str, is_owner: bool, credit: int,
 def search_user(user_id: int = -1, first_name: str = "", last_name: str = "", email: str = ""):
     """search user by either 1) user id 2) first name, last name, and email """
     if user_id == -1 and (first_name == "" or last_name == "" or email == ""):
-        print("Search Criteria not met. You can search by either 1) user id " \
+        print("Search Criteria not met. You can search by either 1) user id "
               "2) first name + last name + email")
         return None
     if user_id != -1:
@@ -80,7 +70,7 @@ def edit_user(user_id: int = -1, **fields):
 # -- events operations starts here --
 
 
-def create_event(user, event_name: str = "", host_name: str = "",
+def create_event(user_id: int = -1, event_name: str = "", host_name: str = "",
                  date_time: datetime = datetime.now(), location: str = ""):
     """create an event in the database
         @:param user_id: user creating the event (owner or first responder)
@@ -88,7 +78,7 @@ def create_event(user, event_name: str = "", host_name: str = "",
         @:param host_name
         @:param date_time: the time of the event
         @:param location: the location of the event"""
-    if user is None:
+    if user_id == -1:
         print("There must be a user creating the event")
         return False
     elif event_name == "":
@@ -97,7 +87,7 @@ def create_event(user, event_name: str = "", host_name: str = "",
     elif location == "":
         print("Location can't be empty")
         return False
-    new_event = Event(user_id = user, event_id = Event.objects().count() + 1, event_name = event_name,
+    new_event = Event(user_id = user_id, event_id = Event.objects().count() + 1, event_name = event_name,
                       host_name = host_name, date = date_time, location = location).save()
     return new_event
 
@@ -144,7 +134,7 @@ def test_api():
 
     print("Search me in the database")
     result = search_user(first_name = "Zinan", last_name = "Zhuang", email = "zinan@utexas.edu")
-    if result != None:
+    if result is not None:
         print(result.to_json())
 
     print("Edit my info")
@@ -172,6 +162,7 @@ def test_api():
     print("User Deleted? %s" % result)
     result = delete_events(event_id = 1)
     print("Event Deleted? %s" % result)
+
 
 if __name__ == "__main__":
     test_api()
