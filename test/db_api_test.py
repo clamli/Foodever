@@ -1,5 +1,6 @@
-import os, sys
-sys.path.append(os.path.dirname(".."))
+import sys, os
+sys.path.append(os.path.abspath('.'))
+sys.path.append(os.path.abspath('..'))
 
 from datetime import datetime
 from api.db_api import DatabaseAPI
