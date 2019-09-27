@@ -1,9 +1,8 @@
 import os, sys
-sys.path.append(os.path.dirname(".."))
-
 from datetime import datetime
 from api.db_api import DatabaseAPI
 
+sys.path.append(os.path.dirname(".."))
 
 def test_api():
     """test api usage"""
