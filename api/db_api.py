@@ -32,7 +32,7 @@ class DatabaseAPI():
         return new_user
 
     def search_user(self, user_id: int = -1, first_name: str = "", last_name: str = "", email: str = ""):
-        """search user by either 1) user id 2) first name, last name, and email """
+        """search user by either 1) user id 2) first name, last name, and email, return a single user """
         if user_id == -1 and (first_name == "" or last_name == "" or email == ""):
             print("Search Criteria not met. You can search by either 1) user id "
                   "2) first name + last name + email")
@@ -91,7 +91,8 @@ class DatabaseAPI():
         return new_event
 
     def search_events(self, **fields):
-        """search events that match the condition"""
+        """search events that match the condition, return a list of events
+        @:returns list: a list of events ranging from 0 to all events in the database"""
         events = Event.objects(**fields).all()
         return events
 
@@ -142,10 +143,11 @@ class DatabaseAPI():
         return True
 
     def search_attendance(self, **fields):
-        """search attendance history
+        """search attendance history, return a list of attendance
         Pass only user id will find all events the user attends
         Pass only event id will find all users attending the event
-        Pass both will check if a user is registered for the event"""
+        Pass both will check if a user is registered for the event
+        @:returns list: a list of attendance ranging from 0 to all attendance in the database"""
         attendance = AttendanceHistory.objects(**fields).all()
 
         return attendance
