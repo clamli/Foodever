@@ -2,6 +2,8 @@
 ALIAS = "localhost"
 PORT = 27017
 DB_NAME = "foodeverdb"
+MOCK_ENGINE = "mongoenginetest"
+MOCK_HOST = "mongomock://localhost"
 
 # Collection names
 USER = "user"

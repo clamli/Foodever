@@ -1,0 +1,5 @@
+mongoengine==0.18.2
+mongomock==3.18.0
+pymongo==3.9.0
+sentinels==1.0.0
+six==1.12.0

@@ -1,15 +1,19 @@
 import mongoengine
 from db.db_collections import User, Event, AttendanceHistory
-from db.db_constants import DB_NAME, ALIAS, PORT, DEFAULT_PREFERENCE_VALUE
+from db.db_constants import DB_NAME, ALIAS, PORT, DEFAULT_PREFERENCE_VALUE, MOCK_HOST, MOCK_ENGINE
 from datetime import datetime
 
 
 class DatabaseAPI():
 
-    def connect(self):
+    def connect(self, dry_run: bool = False):
         """connect to the Foodever database
-        This is the first method you should call in the application"""
-        mongoengine.connect(DB_NAME, host = ALIAS, port = PORT)
+        This is the first method you should call in the application
+        @:param dry_run: false to connect to the real database, true to use a fake one"""
+        if not dry_run:
+            mongoengine.connect(DB_NAME, host = ALIAS, port = PORT)
+        else:
+            mongoengine.connect(MOCK_ENGINE, host = MOCK_HOST)
 
     # -- user operations starts here --
 
