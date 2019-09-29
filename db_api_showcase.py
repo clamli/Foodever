@@ -177,7 +177,7 @@ def showcase_api():
     if result is not None:
         print(result.to_json())
     changes = {'event_name': 'Prom Session', 'host_name': 'Eric',
-    'date': 'datetime(2019, 10, 1, 19, 00)', 'location':'SAC'}
+    'date': datetime(2019, 10, 1, 19, 00), 'location':'SAC'}
     new_time = client.edit_event(4, **changes)
     print(new_time.to_json())  # To do, how does the user know the datetime of the event have changed
 
