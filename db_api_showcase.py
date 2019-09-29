@@ -8,7 +8,7 @@ def showcase_api():
     """showcase the api"""
 
     client = DatabaseAPI()
-    client.connect(dry_run=True)
+    client.connect(dry_run = True)
 
     print("Five users are using the service")
 
