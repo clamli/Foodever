@@ -8,7 +8,7 @@ def showcase_api():
     """showcase the api"""
 
     client = DatabaseAPI()
-    client.connect()
+    client.connect(dry_run=True)
 
     print("Five users are using the service")
 
@@ -52,19 +52,19 @@ def showcase_api():
     input("Press Enter to continue...")
 
     print("Stan attends first session")
-    attendance = client.confirm_attendence(1, 1)
+    attendance = client.confirm_attendance(1, 1)
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...")
     print("Kyle tries to attend second session")
-    attendance = client.confirm_attendence(2, 2)
+    attendance = client.confirm_attendance(2, 2)
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...")
 
     print("Kyle checks whether he's really attending")
     criteria = {"user_id": 2, "event_id": 2}
-    attendance = client.search_attendence(**criteria)   # TODO what if an event is already canceled?
+    attendance = client.search_attendance(**criteria)   # TODO what if an event is already canceled?
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...")
@@ -93,7 +93,7 @@ def showcase_api():
     input("Press Enter to continue...")
 
     print("Kenny attends Communication session")
-    attendance = client.confirm_attendence(4, 2)
+    attendance = client.confirm_attendance(4, 2)
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...")
@@ -115,7 +115,7 @@ def showcase_api():
     input("Press Enter to continue...")
 
     print("Jimmy attends career fair session")
-    attendance = client.confirm_attendence(5, 2)
+    attendance = client.confirm_attendance(5, 2)
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...")
@@ -127,7 +127,7 @@ def showcase_api():
     input("Press Enter to continue...")
 
     print("Jimmy attends meditation  session")
-    attendance = client.confirm_attendence(5, 1)
+    attendance = client.confirm_attendance(5, 1)
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...") # To do how does users know the events they want to attend having the same time?
@@ -145,7 +145,7 @@ def showcase_api():
     input("Press Enter to continue...")
 
     print("Jimmy attends prom session")
-    attendance = client.confirm_attendence(5, 3)
+    attendance = client.confirm_attendance(5, 3)
     if attendance is not None:
         print(attendance.to_json())
     input("Press Enter to continue...")
@@ -158,28 +158,28 @@ def showcase_api():
     input("Press Enter to continue...")  # To do after deleting a user, will a new user continue using this user's id or create a new id?
 
 
-    # # The following exists some mistakes.
-    # print("Eric posts a prom")
-    # search_result = \
-    #     client.search_user(**{"first_name": "Eric", "last_name": "Cartman", "email": "fightanxiety@utexas.edu"})
-    # client.create_event(search_result.user_id, "Prom Session", "Cartmen", datetime(2019, 10, 1, 17, 00), "SAC")
-    # input("Press Enter to continue...")
-    #
-    # print("Kyle is looking for prom at SAC ")
-    # condition = {"event_name": "Prom Session", "location": "SAC"}
-    # events = client.search_events(**condition)
-    # print(events.to_json())
-    # input("Press Enter to continue...")
-    #
-    # print("After Kyle decided to attend the prom, Eric changes the datetime of prom event ")
-    # result = client.search_events(event_name = "Prom Session", host_name = "Kenny",
-    #                               date_time = datetime(2019, 10, 1, 17, 00), location = "SAC")
-    # if result is not None:
-    #     print(result.to_json())
-    # changes = {'event_name': 'Prom Session', 'host_name': 'Eric',
-    # 'date_time': 'datetime(2019, 10, 1, 19, 00)', 'location':'SAC'}
-    # new_time = client.edit_event(result.event_id, **changes)
-    # print(new_time.to_json())  # To do, how does the user know the datetime of the event have changed
+    # The following exists some mistakes.
+    print("Eric posts a show")
+    search_result = \
+        client.search_user(**{"first_name": "Eric", "last_name": "Cartman", "email": "fightanxiety@utexas.edu"})
+    client.create_event(search_result.user_id, "Prom Session", "Eric", datetime(2019, 10, 1, 17, 00), "SAC")
+    input("Press Enter to continue...")
+
+    print("Kyle is looking for a prom at SAC ")
+    condition = {"event_name": "Prom Session", "location": "SAC"}
+    events = client.search_events(**condition)
+    print(events.to_json())
+    input("Press Enter to continue...")
+
+    print("After Kyle decided to attend the prom, Eric changes the datetime of prom event ")
+    result = client.search_events(event_name = "Prom Session", host_name = "Eric",
+                                  date = datetime(2019, 10, 1, 17, 00),location = "SAC")
+    if result is not None:
+        print(result.to_json())
+    changes = {'event_name': 'Prom Session', 'host_name': 'Eric',
+    'date': 'datetime(2019, 10, 1, 19, 00)', 'location':'SAC'}
+    new_time = client.edit_event(4, **changes)
+    print(new_time.to_json())  # To do, how does the user know the datetime of the event have changed
 
 
 if __name__ == "__main__":
