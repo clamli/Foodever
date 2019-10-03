@@ -1,10 +1,10 @@
 from datetime import datetime
-from db.db_constants import DEFAULT_PREFERENCE_VALUE
+from application.db.db_constants import DEFAULT_PREFERENCE_VALUE
 
 
 import unittest
 from mongoengine import disconnect
-from api.db_api import DatabaseAPI
+from application.api.db_api import DatabaseAPI
 
 
 class DatabaseAPITest(unittest.TestCase):

@@ -1,5 +1,9 @@
-mongoengine==0.18.2
 mongomock==3.18.0
-pymongo==3.9.0
 sentinels==1.0.0
-six==1.12.0
+Flask>=1.0.0
+google-cloud-datastore==1.7.1
+Flask-MongoEngine==0.9.5
+gunicorn==19.9.0
+oauth2client==4.1.2
+six>=1.11.0
+dnspython==1.16.0

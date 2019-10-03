@@ -1,6 +1,6 @@
 import os, sys
 from datetime import datetime
-from api.db_api import DatabaseAPI
+from application.api.db_api import DatabaseAPI
 
 sys.path.append(os.path.dirname(".."))
 
