@@ -27,7 +27,7 @@ class Event(db.Document):
     host_name = db.StringField(max_length = 100, required = True)
     date = db.DateTimeField(default = datetime.datetime.utcnow)
     location = db.StringField(required = True)
-    # food = fields.DictField(default={"foodName": fields.StringField(max_length=30),
-    #                                  "foodTags": fields.ListField(fields.StringField(max_length=30)),
-    #                                  "foodType": fields.ListField(fields.StringField(max_length=30)),
-    #                                  "foodImages": fields.ListField(fields.ImageField())})
+    food = db.DictField(default={"foodName": db.StringField(max_length=30),
+                                 "foodTags": db.ListField(db.StringField(max_length=30)),
+                                 "foodType": db.ListField(db.StringField(max_length=30)),
+                                 "foodImages": db.ListField(db.StringField())})

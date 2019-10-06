@@ -8,7 +8,6 @@ mongo_engine = None
 
 def init_app(app):
     global mongo_engine
-
     mongo_engine = MongoEngine()
     mongo_engine.init_app(app)
 
@@ -72,7 +71,7 @@ def edit_user(user_id: int = -1, **fields):
 
 
 def create_event(user_id: int = -1, event_name: str = "", host_name: str = "",
-                 date_time: datetime = datetime.now(), location: str = ""):
+                 date_time: datetime = datetime.now(), location: str = "", food: dict = {}):
     """create an event in the database
         @:param user_id: user creating the event (owner or first responder)
         @:param event_name
@@ -89,7 +88,7 @@ def create_event(user_id: int = -1, event_name: str = "", host_name: str = "",
         print("Location can't be empty")
         return None
     new_event = Event(user_id = user_id, event_id = Event.objects().count() + 1, event_name = event_name,
-                      host_name = host_name, date = date_time, location = location).save()
+                      host_name = host_name, date = date_time, location = location, food = food).save()
     return new_event
 
 

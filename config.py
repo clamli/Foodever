@@ -39,7 +39,7 @@ PROJECT_ID = 'lboy-api-test'
 # instance.
 CLOUDSQL_USER = 'root'
 CLOUDSQL_PASSWORD = 'your-cloudsql-password'
-CLOUDSQL_DATABASE = 'application'
+CLOUDSQL_DATABASE = 'bookshelf'
 # Set this value to the Cloud SQL connection name, e.g.
 #   "project:region:cloudsql-instance".
 # You must also update the value in app.yaml.
@@ -75,6 +75,23 @@ else:
 # Mongo configuration
 # If using mongolab, the connection URI is available from the mongolab control
 # panel. If self-hosting on compute engine, replace the values below.
-MONGO_URI = \
-    'mongodb+srv://clamli:lby951127@mongodb-test-ya5pt.gcp.mongodb.net/test?retryWrites=true&w=majority'
+MONGODB_SETTINGS = {
+    'host': 'mongodb+srv://clamli:lby951127@mongodb-test-ya5pt.gcp.mongodb.net/foodever?retryWrites=true&w=majority'
+}
 
+# Google Cloud Storage and upload settings.
+# Typically, you'll name your bucket the same as your project. To create a
+# bucket:
+#
+#   $ gsutil mb gs://<your-bucket-name>
+#
+# You also need to make sure that the default ACL is set to public-read,
+# otherwise users will not be able to see their upload images:
+#
+#   $ gsutil defacl set public-read gs://<your-bucket-name>
+#
+# You can adjust the max content length and allow extensions settings to allow
+# larger or more varied file types if desired.
+CLOUD_STORAGE_BUCKET = 'lboy-api-test.appspot.com'
+MAX_CONTENT_LENGTH = 8 * 1024 * 1024
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
