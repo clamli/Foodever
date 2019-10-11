@@ -1,20 +1,51 @@
 from application import get_db_api
 from application.api import storage_api
-from flask import Blueprint, render_template, request, current_app
-
+from flask import Blueprint, render_template, request, current_app, redirect, session as login_session
 
 crud = Blueprint('crud', __name__)
 
 
 @crud.route("/")
-def test():
+def show_events():
+    api = get_db_api()
+    events = api.search_events()
+    # create some fake event if none
+    if len(events) == 0:
+        api.create_user("Zinan", "Zhuang", False, 0, "zinan@utexas.edu")
+        api.create_event(1, "Library Dine", "Zinan", location = "pcl", tags=["school", "UT"])
+        api.create_event(1, "Library Dine 2", "Zinan", location = "pcl", tags=["school"])
+        events = api.search_events()
 
-    user = {"first_name": "Stan", "last_name": "Marsh",
-            "is_owner": False, "credit": 100, "email": "stanmarsh@utexas.edu"}
-    get_db_api().create_user(**user)
+    if 'username' not in login_session:
+        return render_template("public_show_events.html", events = events)
+    else:
+        return render_template("show_events.html", events = events)
 
-    return render_template("hello_world.html")
+@crud.route("/login")
+def show_login():
+    login_session['username'] = 'Zinan'
+    return redirect("/")
 
+@crud.route("/logout")
+def show_logout():
+    login_session.pop("username", None)
+    return redirect("/")
+
+@crud.route("/search", methods = ["GET", "POST"])
+def search():
+    return render_template("search_results.html")
+
+@crud.route("/create_event")
+def create_event():
+    return render_template("create_event.html")
+
+@crud.route("/my_activities")
+def show_activities():
+    return render_template("activities.html")
+
+@crud.route("/event/<event_id>")
+def view_event(event_id):
+    return render_template("event_details.html", event_id = event_id)
 
 def upload_image_file(file):
     """

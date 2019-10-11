@@ -1,0 +1,16 @@
+#site-logo {
+    font-size: 250%;
+}
+
+.navbar {
+    background-color: mintcream;
+}
+
+.form-inline {
+    margin: auto;
+    background-color: beige;
+}
+
+.form-group {
+    margin: 0px 10px 10px 10px;
+}

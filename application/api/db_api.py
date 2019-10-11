@@ -71,7 +71,8 @@ def edit_user(user_id: int = -1, **fields):
 
 
 def create_event(user_id: int = -1, event_name: str = "", host_name: str = "",
-                 date_time: datetime = datetime.now(), location: str = "", food: dict = {}):
+                 date_time: datetime = datetime.now(), location: str = "",
+                 tags: list = [], food: dict = {}):
     """create an event in the database
         @:param user_id: user creating the event (owner or first responder)
         @:param event_name
@@ -88,13 +89,16 @@ def create_event(user_id: int = -1, event_name: str = "", host_name: str = "",
         print("Location can't be empty")
         return None
     new_event = Event(user_id = user_id, event_id = Event.objects().count() + 1, event_name = event_name,
-                      host_name = host_name, date = date_time, location = location, food = food).save()
+                      host_name = host_name, date = date_time, location = location, tags = tags, food = food).save()
     return new_event
 
 
 def search_events(**fields):
     """search events that match the condition, return a list of events
     @:returns list: a list of events ranging from 0 to all events in the database"""
+    if "tags" in fields:
+        fields.update({"tags__all": fields["tags"]})
+        fields.pop("tags")
     events = Event.objects(**fields).all()
     return events
 
