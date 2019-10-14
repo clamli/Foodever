@@ -2,9 +2,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" crossorigin="anonymous">
+
+    <title>Foodever - create event</title>
 </head>
 <body>
-<div>Create event</div>
+<h1>Create Event</h1>
+
+<div class="container">
+  <form name="event-form">
+    <div class="form-group">
+      <label for="input-event-name">Event Name</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" id="input-event-name" name="event_name">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <!-- @TODO add 'I am the host' button -->
+      <label for="input-host-name">Host Name</label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <input type="checkbox" aria-label="Checkbox for following text input" name="check" id="hostingCheck"
+                    onClick="hosting()">
+            &nbsp; I am hosting
+          </div>
+        </div>
+        <input type="text" class="form-control" id="input-host-name" 
+                aria-label="Text input with checkbox" name="host" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="datetimepicker">Pick date and time</label>
+      <div class="input-group mb-3">
+        <div class='input-group date' id='datetimepicker'>
+            <input type="datetime-local" id="datetimepick" name="date">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="input-location">Input location</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" id="input-location" name="location">
+      </div>
+
+      <label for="tags">Tags</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control col-sm-12" value="" data-role="tagsinput" id="tags" style="width: 100%" name="tags">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <!-- @TODO Change Background Color -->
+      <label for="foods">Food</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control col-sm-12" value="" data-role="tagsinput" id="foods" style="width: 100%" name="food">
+      </div>
+
+      <button type="button" class="btn btn-primary" id="submit-btn" onClick="submitEvent()">
+        Submit
+      </button>
+    </div>
+ </form>
+</div>
+
+<script type="text/javascript">
+  function hosting() {
+    // Get the checkbox
+    var checkBox = document.getElementById("hostingCheck");
+    var nameInput = document.getElementById("input-host-name")
+    // If the checkbox is checked, display the user's name
+    if (checkBox.checked == true){
+      nameInput.value = "username";
+    } else {
+      nameInput.value = "";
+    }
+  }
+  function submitEvent() {
+    // @TODO POST a pure json, not a list of jsons
+    console.log($("form").serializeArray())
+    $.ajax
+    ({
+      type: "POST",
+      //the url where you want to sent the userName and password to
+      url: 'create_event',
+      dataType: 'json',
+      contentType: 'application/json',
+      async: true,
+      //json object to sent to the authentication url
+      data: JSON.stringify($("form").serializeArray()),
+      success: function () {
+      alert("Event created successfully!"); 
+      }
+    })
+  }
+
+</script>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js" crossorigin="anonymous"></script>
+
+
 </body>
 </html>

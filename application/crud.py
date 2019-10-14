@@ -1,6 +1,9 @@
 from application import get_db_api
-from application.api import storage_api
+from application.api import storage_api, db_api
 from flask import Blueprint, render_template, request, current_app, redirect, session as login_session
+from flask import jsonify
+from datetime import datetime
+import json
 
 crud = Blueprint('crud', __name__)
 
@@ -35,9 +38,24 @@ def show_logout():
 def search():
     return render_template("search_results.html")
 
-@crud.route("/create_event")
+@crud.route("/create_event", methods = ["GET", "POST"])
 def create_event():
-    return render_template("create_event.html")
+    if request.method == 'GET':
+        return render_template("create_event.html")
+
+    data = request.get_json()
+    print("INFO: Creating event..." + format(data[4]))
+    if request.method == 'POST':
+        if data[0].get('value') is not None and data[4].get('value') is not None:
+            db_api.create_event(1, "Meditation Session", "Kyle", datetime(2019, 9, 26, 14, 00), "School")
+            # db_api.create_event(1, event_name=data[0].get('value'), host_name=data[1].get('value'), 
+            #                     date_time=datetime.strptime(data[2].get('value'), '%Y-%m-%dT%H:%M'),
+            #                     location=data[3].get('value'), tags=data[4].get('value').split(',')
+            #                     # , food=data[5].get('value').split(',')
+            #                     )
+            return jsonify({'ok': True, 'message': 'Event created successfully!'}), 200
+        else:
+            return jsonify({'ok': False, 'message': 'Bad request parameters!'}), 400
 
 @crud.route("/my_activities")
 def show_activities():
