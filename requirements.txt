@@ -10,3 +10,5 @@ dnspython==1.16.0
 google-cloud-datastore==1.7.1
 google-cloud-storage==1.13.0
 gunicorn==19.9.0
+google-auth==1.6.2
+requests==2.21.0

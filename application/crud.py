@@ -5,8 +5,11 @@ from flask import jsonify
 from datetime import datetime
 import json
 
-crud = Blueprint('crud', __name__)
+from google.auth.transport import requests
+from google.cloud import datastore
+import google.oauth2.id_token
 
+crud = Blueprint('crud', __name__)
 
 @crud.route("/")
 def show_events():
@@ -19,15 +22,36 @@ def show_events():
         api.create_event(1, "Library Dine 2", "Zinan", location = "pcl", tags=["school"])
         events = api.search_events()
 
-    if 'username' not in login_session:
+    if 'user_email' not in login_session:
         return render_template("public_show_events.html", events = events)
     else:
         return render_template("show_events.html", events = events)
 
 @crud.route("/login")
 def show_login():
-    login_session['username'] = 'Zinan'
-    return redirect("/")
+    firebase_request_adapter = requests.Request()
+    # Verify Firebase auth.
+    id_token = request.cookies.get("token")
+    error_message = None
+    claims = None
+
+    if id_token:
+        try:
+            # Verify the token against the Firebase Auth API. This example
+            # verifies the token on each page load. For improved performance,
+            # some applications may wish to cache results in an encrypted
+            # session store (see for instance
+            # http://flask.pocoo.org/docs/1.0/quickstart/#sessions).
+            claims = google.oauth2.id_token.verify_firebase_token(
+                id_token, firebase_request_adapter)
+        except ValueError as exc:
+            # This will be raised if the token is expired or any other
+            # verification checks fail.
+            error_message = str(exc)
+    session['user_email'] = claims['email']
+    return render_template(
+        'login.html',
+        user_data=claims, error_message=error_message)
 
 @crud.route("/logout")
 def show_logout():
@@ -46,6 +70,7 @@ def create_event():
     data = request.get_json()
     print("INFO: Creating event..." + format(data[4]))
     if request.method == 'POST':
+        # @TODO Get username
         if data[0].get('value') is not None and data[4].get('value') is not None:
             db_api.create_event(1, "Meditation Session", "Kyle", datetime(2019, 9, 26, 14, 00), "School")
             # db_api.create_event(1, event_name=data[0].get('value'), host_name=data[1].get('value'), 
@@ -101,4 +126,4 @@ def image_upload():
                     "foodImages": [image_url]}
             get_db_api().create_event(**{"user_id": "001", "event_name": "Party", "host_name": "Zinan", "location": "school", "food": food})
 
-        return 'Image Upload Successfully'
+        return 'Image uploaded successfully'
