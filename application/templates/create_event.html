@@ -78,7 +78,7 @@
     var nameInput = document.getElementById("input-host-name")
     // If the checkbox is checked, display the user's name
     if (checkBox.checked == true){
-      nameInput.value = "username";
+      nameInput.value = '{{ first_name }}';
     } else {
       nameInput.value = "";
     }

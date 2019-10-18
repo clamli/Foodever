@@ -1,14 +1,13 @@
 import os, sys
 from datetime import datetime
-from application.api.db_api import DatabaseAPI
+from application.api import db_api
 
 sys.path.append(os.path.dirname(".."))
 
 def showcase_api():
     """showcase the api"""
-
-    client = DatabaseAPI()
-    client.connect(dry_run = True)
+    client = db_api
+    # client.connect(dry_run = True)
 
     print("Five users are using the service")
 
@@ -31,13 +30,14 @@ def showcase_api():
 
     print("Kyle posts a meditation event")
     search_result = \
-        client.search_user(**{"first_name": "Kyle", "last_name": "Broflovski", "email": "broflovski@utexas.edu"})
+        client.search_user(**{ "email": "broflodvski@utexas.edu"})
     client.create_event(search_result.user_id, "Meditation Session", "Kyle", datetime(2019, 9, 26, 14, 00), "School")
+    print(search_result)
     input("Press Enter to continue...")
 
     print("Eric also posts a meditation event in the same time")
     search_result = \
-        client.search_user(**{"first_name": "Eric", "last_name": "Cartman", "email": "fightanxiety@utexas.edu"})
+        client.search_user(**{"email": "fightanxiety@utexas.edu"})
     client.create_event(search_result.user_id, "Meditation Session", "Eric", datetime(2019, 9, 26, 16, 00), "School")
     input("Press Enter to continue...")
 

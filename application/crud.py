@@ -22,7 +22,7 @@ def show_events():
         api.create_event(1, "Library Dine 2", "Zinan", location = "pcl", tags=["school"])
         events = api.search_events()
 
-    if 'user_email' not in login_session:
+    if 'user_id' not in login_session:
         return render_template("public_show_events.html", events = events)
     else:
         return render_template("show_events.html", events = events)
@@ -34,6 +34,7 @@ def show_login():
     id_token = request.cookies.get("token")
     error_message = None
     claims = None
+    api = get_db_api()
 
     if id_token:
         try:
@@ -44,19 +45,35 @@ def show_login():
             # http://flask.pocoo.org/docs/1.0/quickstart/#sessions).
             claims = google.oauth2.id_token.verify_firebase_token(
                 id_token, firebase_request_adapter)
+            login_session['user_email'] = claims['email']
+            # parse username
+            user_name = claims['name'].split()
+            first_name = " ".join(user_name[:-1])
+            last_name = user_name[-1]
+            search_result = api.search_user(first_name=first_name, last_name=last_name, 
+                                                            email=claims['email'])
+            if search_result == None:
+                new_user = api.create_user(first_name=first_name, last_name=last_name, 
+                                            is_owner=False, email=claims['email'], credit=0)
+                login_session['user_id'] = new_user.user_id
+                print("INFO: New user created: user_id: {}".format(login_session['user_id']))
+            else:
+                login_session['user_id'] = search_result.user_id
+                print("INFO: Existing user logged in: user_id: {}".format(login_session['user_id']))
+
         except ValueError as exc:
             # This will be raised if the token is expired or any other
             # verification checks fail.
             error_message = str(exc)
-    session['user_email'] = claims['email']
+
     return render_template(
         'login.html',
         user_data=claims, error_message=error_message)
 
 @crud.route("/logout")
 def show_logout():
-    login_session.pop("username", None)
-    return redirect("/")
+    login_session.pop("user_id", None)
+    return redirect("/login")
 
 @crud.route("/search", methods = ["GET", "POST"])
 def search():
@@ -64,8 +81,10 @@ def search():
 
 @crud.route("/create_event", methods = ["GET", "POST"])
 def create_event():
+    api = get_db_api()
     if request.method == 'GET':
-        return render_template("create_event.html")
+        search_result = api.search_user(user_id=login_session['user_id'])
+        return render_template("create_event.html", first_name=search_result.first_name)
 
     data = request.get_json()
     print("INFO: Creating event..." + format(data[4]))
@@ -124,6 +143,7 @@ def image_upload():
                     "foodTags": ["delicious", "healthy"],
                     "foodType": ["chinese", "noodle"],
                     "foodImages": [image_url]}
-            get_db_api().create_event(**{"user_id": "001", "event_name": "Party", "host_name": "Zinan", "location": "school", "food": food})
+            get_db_api().create_event(**{"user_id": "001", "event_name": "Party", 
+                                            "host_name": "Zinan", "location": "school", "food": food})
 
         return 'Image uploaded successfully'
