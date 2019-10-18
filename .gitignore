@@ -6,3 +6,4 @@ env/
 .DS_Store
 config.py
 **/#*#
+requirements.txt

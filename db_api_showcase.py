@@ -77,7 +77,6 @@ def showcase_api():
     new_me = client.edit_user(result.user_id, **changes)
     print(new_me.to_json())
 
-    # Lei edits
     input("Press Enter to continue...")
 
     print("Jimmy posts a communication event")
